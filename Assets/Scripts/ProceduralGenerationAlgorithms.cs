@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class ProceduralGenerationAlgorithms
 {
+    //startPosition에서 walkLength만큼 랜덤방향으로 걸은 길 path를 반환
     public static HashSet<Vector2Int> SimpleRandomWalk(Vector2Int startPosition, int walkLength)
     {
         HashSet<Vector2Int> path = new HashSet<Vector2Int>();
@@ -35,6 +36,65 @@ public static class ProceduralGenerationAlgorithms
         }
 
         return corridor;
+    }
+
+    public static List<BoundsInt> BinarySpacePartitioning(BoundsInt spaceToSplit, int minWidth, int minHeight)
+    {
+        Queue<BoundsInt> roomsQueue = new Queue<BoundsInt>();
+        List<BoundsInt> roomsList = new List<BoundsInt>();
+        roomsQueue.Enqueue(spaceToSplit);
+        while (roomsQueue.Count > 0)
+        {
+            var room = roomsQueue.Dequeue();
+            if (room.size.y >= minHeight && room.size.x >= minWidth)
+            {
+                if (Random.value < 0.5f)
+                {
+                    if (room.size.y >= minHeight * 2)
+                    {
+                        SplitHorizontally(minWidth, minHeight, roomsQueue, room);
+                    }
+                    else if (room.size.x >= minWidth * 2)
+                    {
+                        SplitVertically(minWidth, minHeight, roomsQueue, room);
+                    }
+                    else if (room.size.x >= minWidth && room.size.y >= minHeight)
+                    {
+                        roomsList.Add(room);
+                    }
+                }
+                else
+                {
+                    if (Random.value < 0.5f)
+                    {
+
+                        if (room.size.x >= minWidth * 2)
+                        {
+                            SplitVertically(minWidth, minHeight, roomsQueue, room);
+                        }
+                        else if (room.size.y >= minHeight * 2)
+                        {
+                            SplitHorizontally(minWidth, minHeight, roomsQueue, room);
+                        }
+                        else if (room.size.x >= minWidth && room.size.y >= minHeight)
+                        {
+                            roomsList.Add(room);
+                        }
+                    }
+                }
+            }
+        }
+        return roomsList;
+    }
+
+        private static void SplitHorizontally(int minWidth, int minHeight, Queue<BoundsInt> roomsQueue, BoundsInt room)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private static void SplitVertically(int minWidth, int minHeight, Queue<BoundsInt> roomsQueue, BoundsInt room)
+    {
+        throw new System.NotImplementedException();
     }
 }
 
